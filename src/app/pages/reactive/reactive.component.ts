@@ -26,19 +26,33 @@ export class ReactiveComponent implements OnInit {
   get correoNoValido() {
     return this.forma.get('correo').invalid && this.forma.get('correo').touched;
   }
+  get departamentoNoValido() {
+    return this.forma.get('direccion.departamento').invalid && this.forma.get('direccion.departamento').touched;
+  }
+  get municipioNoValido() {
+    return this.forma.get('direccion.municipio').invalid && this.forma.get('direccion.municipio').touched;
+  }
 
   crearFormulario() {
     this.forma = this.formBuilder.group({
       nombre  : ['', [Validators.required, Validators.minLength(5)]],
       apellido: ['', Validators.required],
-      correo  : ['', [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')]]
+      correo  : ['', [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')]],
+      direccion  : this.formBuilder.group({
+        departamento: ['', Validators.required],
+        municipio: ['', Validators.required]
+      })
     });
   }
 
   guardar() {
     if (this.forma.invalid) {
       Object.values(this.forma.controls).forEach( control => {
-        control.markAsTouched();
+        if (control instanceof FormGroup) {
+          Object.values(control.controls).forEach( controls => controls.markAsTouched());
+        } else {
+          control.markAsTouched();
+        }
       });
       return;
     }

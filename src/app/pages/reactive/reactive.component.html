@@ -4,7 +4,7 @@
   <div>
     <div class="form-group row">
       <label class="col-2 col-form-label">Nombre</label>
-      <div class="col-8">
+      <div class="col">
         <input
           class="form-control"
           type="text"
@@ -20,7 +20,7 @@
 
     <div class="form-group row">
       <label class="col-2 col-form-label">Apellido</label>
-      <div class="col-8">
+      <div class="col">
         <input
           class="form-control"
           type="text"
@@ -37,7 +37,7 @@
 
   <div class="form-group row">
     <label class="col-2 col-form-label">Correo</label>
-    <div class="col-8">
+    <div class="col">
       <input
         class="form-control"
         type="email"
@@ -51,9 +51,41 @@
     </div>
   </div>
 
+  <div class="form-group row" formGroupName="direccion">
+    <label class="col-2 col-form-label">Dirección</label>
+    <div class="form-row col">
+      <div class="col">
+        <input
+          type="text"
+          name="departamento"
+          class="form-control"
+          placeholder="Departamento"
+          formControlName="departamento"
+          [class.is-invalid]="departamentoNoValido"
+        />
+        <small class="form-text text-danger" *ngIf="departamentoNoValido">
+          Departamento obligatorio
+        </small>
+      </div>
+      <div class="col">
+        <input
+          type="text"
+          name="municipio"
+          class="form-control"
+          placeholder="municipio"
+          formControlName="municipio"
+          [class.is-invalid]="municipioNoValido"
+        />
+        <small class="form-text text-danger" *ngIf="municipioNoValido">
+          Municipio obligatorio
+        </small>
+      </div>
+    </div>
+  </div>
+
   <div class="form-group row">
     <label class="col-2 col-form-label">&nbsp;</label>
-    <div class="input-group col-md-8">
+    <div class="input-group col">
       <button type="submit" class="btn btn-outline-primary btn-block">
         Guardar
       </button>
