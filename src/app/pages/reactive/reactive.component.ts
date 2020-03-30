@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { ThrowStmt } from '@angular/compiler';
+import { ValidadoresService } from '../../services/validadores.service';
 
 @Component({
   selector: 'app-reactive',
@@ -11,7 +12,8 @@ export class ReactiveComponent implements OnInit {
   
   forma: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder,
+              private validadores: ValidadoresService) {
     this.crearFormulario();
     this.cargarDataAFormulario();
   }
@@ -43,7 +45,7 @@ export class ReactiveComponent implements OnInit {
   crearFormulario() {
     this.forma = this.formBuilder.group({
       nombre  : ['', [Validators.required, Validators.minLength(5)]],
-      apellido: ['', Validators.required],
+      apellido: ['', [Validators.required, this.validadores.noTello]],
       correo  : ['', [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')]],
       direccion  : this.formBuilder.group({
         departamento: ['', Validators.required],
