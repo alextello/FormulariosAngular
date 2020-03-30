@@ -40,6 +40,16 @@ export class ReactiveComponent implements OnInit {
   get municipioNoValido() {
     return this.forma.get('direccion.municipio').invalid && this.forma.get('direccion.municipio').touched;
   }
+  
+  get pass1NoValido() {
+    return this.forma.get('pass1').invalid && this.forma.get('pass1').touched;
+  }
+  
+  get pass2NoValido() {
+    const pass1 = this.forma.get('pass1').value;
+    const pass2 = this.forma.get('pass2').value;
+    return (pass1 === pass2) ? false : true;
+  }
 
 
   crearFormulario() {
@@ -47,11 +57,15 @@ export class ReactiveComponent implements OnInit {
       nombre  : ['', [Validators.required, Validators.minLength(5)]],
       apellido: ['', [Validators.required, this.validadores.noTello]],
       correo  : ['', [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')]],
+      pass1: ['', Validators.required],
+      pass2: ['', Validators.required],
       direccion  : this.formBuilder.group({
         departamento: ['', Validators.required],
         municipio: ['', Validators.required]
       }),
-      pasatiempos: this.formBuilder.array([])
+      pasatiempos: this.formBuilder.array([]),
+    }, {
+      validators: this.validadores.passwordsIguales('pass1', 'pass2')
     });
   }
 
