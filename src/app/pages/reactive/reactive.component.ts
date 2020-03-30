@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-reactive',
@@ -12,11 +13,16 @@ export class ReactiveComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) {
     this.crearFormulario();
+    this.cargarDataAFormulario();
   }
 
   ngOnInit(): void {
   }
 
+  get pasatiempos() {
+    return this.forma.get('pasatiempos') as FormArray;
+  }
+  
   get nombreNoValido() {
     return this.forma.get('nombre').invalid && this.forma.get('nombre').touched;
   }
@@ -33,6 +39,7 @@ export class ReactiveComponent implements OnInit {
     return this.forma.get('direccion.municipio').invalid && this.forma.get('direccion.municipio').touched;
   }
 
+
   crearFormulario() {
     this.forma = this.formBuilder.group({
       nombre  : ['', [Validators.required, Validators.minLength(5)]],
@@ -41,14 +48,33 @@ export class ReactiveComponent implements OnInit {
       direccion  : this.formBuilder.group({
         departamento: ['', Validators.required],
         municipio: ['', Validators.required]
-      })
+      }),
+      pasatiempos: this.formBuilder.array([])
     });
+  }
+
+  cargarDataAFormulario() {
+    // this.forma.setValue({
+    this.forma.reset({
+      direccion: {
+       departamento: 'Quetzaltenango',
+       municipio: 'Quetzaltenango'
+      }
+    });
+  }
+
+  agregarPasatiempo() {
+    this.pasatiempos.push(this.formBuilder.control('', Validators.required));
+  }
+
+  borrarPasatiemo(i: number) {
+    this.pasatiempos.removeAt(i);
   }
 
   guardar() {
     if (this.forma.invalid) {
       Object.values(this.forma.controls).forEach( control => {
-        if (control instanceof FormGroup) {
+        if (control instanceof FormGroup || control instanceof FormArray) {
           Object.values(control.controls).forEach( controls => controls.markAsTouched());
         } else {
           control.markAsTouched();
@@ -56,5 +82,10 @@ export class ReactiveComponent implements OnInit {
       });
       return;
     }
+
+    // POSTEO DE INFORMACIÓN
+    this.forma.reset({
+      nombre: 'Sin nombre'
+    });
   }
 }
